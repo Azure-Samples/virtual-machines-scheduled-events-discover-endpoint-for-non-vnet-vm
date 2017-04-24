@@ -15,5 +15,4 @@ In the case where your VM is not configured within a VNET, the default scheduled
 
 
 
-
 #### For more detailed info on script parameters and how endpoint discovery works, please read the [README.md](https://github.com/Azure-Samples/virtual-machines-python-scheduled-events-discover-endpoint-for-non-vnet-vm/blob/master/python/README.md) for the python scripts. 
