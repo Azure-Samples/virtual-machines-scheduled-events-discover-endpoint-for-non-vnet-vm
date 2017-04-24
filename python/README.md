@@ -1,13 +1,13 @@
 # Overview
 
 There are a total of 2 scripts:
-1.	Discovery.py ñ This contains the core logic and is the entry point
-2.	Util.py ñ This contains a bunch of utility/helper functions
+1.	Discovery.py ‚Äì This contains the core logic and is the entry point
+2.	Util.py ‚Äì This contains a bunch of utility/helper functions
 
 
 ## How does endpoint discovery work?
 
-* The mechanism to discover the CloudControl IP address is to resend a DHCP request. In the centralized DHCP service, the response is customized 
+The mechanism to discover the CloudControl IP address is to resend a DHCP request. In the centralized DHCP service, the response is customized 
 by carrying the CloudControl IP address inside the DHCP response option 245. The endpoint discovery script uses the same mechanism to determine 
 the CloudControl IP address. Once the IP address is obtained, it is made available as part of the environment variable both in Windows and Linux worlds.
 
@@ -15,7 +15,7 @@ the CloudControl IP address. Once the IP address is obtained, it is made availab
 ## Script usage
 
 By default, upon discovering the CloudControl IP address, the script adds it to the environment variables. The variable name in both Windows and 
-Linux is ìCLOUDCONTROLIPî. However, the script has two additional modes of operation ñ ì--debugî and ì--donotaddtoenvî as listed below.
+Linux is ‚ÄúCLOUDCONTROLIP‚Äù. However, the script has two additional modes of operation ‚Äì ‚Äú--debug‚Äù and ‚Äú--donotaddtoenv‚Äù as listed below.
 
 --debug: Enables running the script in debug mode wherein more logging is available for debugging purposes
 --donotaddtoenv: Enables not adding the CloudControl IP as part of the environment variable
@@ -33,8 +33,8 @@ optional arguments:
 
 Pre-requesites: Install python 2.4+ 
 
-Running on Windows: Once you have installed python, open an admin cmd window. Run the script by calling ìpython discovery.pyî. 
-If you want to include any of the optional switches, you can do so by calling ìpython discovery.py ñdebugî.
+Running on Windows: Once you have installed python, open an admin cmd window. Run the script by calling ‚Äúpython discovery.py‚Äù. 
+If you want to include any of the optional switches, you can do so by calling ‚Äúpython discovery.py ‚Äìdebug‚Äù.
 
-Running on Linux: Once you have installed python, run the script by calling ìsudo python discovery.pyî. You can include any/all of the 
+Running on Linux: Once you have installed python, run the script by calling ‚Äúsudo python discovery.py‚Äù. You can include any/all of the 
 optional switches.
