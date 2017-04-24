@@ -12,14 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# Requires Python 2.4+ and Openssl 1.0+
-
+# Requires Python 3.5+ and Openssl 1.0+
 
 # Output of running the script on Windows:
 # The cloud control endpoint IP address will be available as part of the system environment variable.
 #
 # Output of running the script on Linux:
-# The cloud control endpoint IP address will be available as part of the environment variable for all users.
+# The cloud control endpoint IP address will be available as part of the
+# environment variable for all users.
 
 import argparse
 import os
@@ -29,29 +29,34 @@ import array
 import time
 import util
 import sys
-import _winreg as wreg
+import winreg as wreg
 from uuid import getnode as get_mac
 
 """
 Defines dhcp exception
 """
 
+
 class BaseError(Exception):
     """
     Base error class.
     """
+
     def __init__(self, errno, msg, inner=None):
         msg = u"({0}){1}".format(errno, msg)
         if inner is not None:
             msg = u"{0} \n  inner error: {1}".format(msg, inner)
         super(BaseError, self).__init__(msg)
 
+
 class DhcpError(BaseError):
     """
     Failed to handle dhcp response
     """
+
     def __init__(self, msg=None, inner=None):
         super(DhcpError, self).__init__('000006', msg, inner)
+
 
 class DhcpHandler(object):
 
@@ -110,11 +115,12 @@ class DhcpHandler(object):
         if donotaddtoenv == False:
             print('Adding Cloud Control endpoint IP to the environment')
             if sys.platform == 'win32':
-                os.system("SETX {0} {1} /M".format(env_var,env_val))
-                
+                os.system("SETX {0} {1} /M".format(env_var, env_val))
+
             elif "linux" in sys.platform:
-                # Set the cloud control IP address in the environment for the current process
-                os.environ['CLOUDCONTROLIP']=self.endpoint
+                # Set the cloud control IP address in the environment for the
+                # current process
+                os.environ['CLOUDCONTROLIP'] = self.endpoint
 
                 # Set the cloud control IP address in the environment for all users
                 # This is done by reading the file /etc/profile line by line
@@ -133,20 +139,25 @@ class DhcpHandler(object):
                 f.write("export {0}={1}\n".format(env_var, env_val))
                 f.close()
             else:
-                print('Unknown operating system detected. Cannot add the cloud control IP to the environment')
+                print(
+                    'Unknown operating system detected. Cannot add the cloud control IP to the environment')
         if outputregistry == True and sys.platform == 'win32':
-            print('Adding Cloud Control endpoint to registry location HKEY_LOCAL_MACHINE\\Software\\CloudControl')
-            key = wreg.CreateKey(wreg.HKEY_LOCAL_MACHINE, "Software\\CloudControl")
+            print(
+                'Adding Cloud Control endpoint to registry location HKEY_LOCAL_MACHINE\\Software\\CloudControl')
+            key = wreg.CreateKey(wreg.HKEY_LOCAL_MACHINE,
+                                 "Software\\CloudControl")
             # Create new value
-            wreg.SetValueEx(key, 'CloudControlIp', 0, wreg.REG_SZ, self.endpoint)
-            print(wreg.QueryValueEx(key,'CloudControlIp'))
-            key.Close()	
+            wreg.SetValueEx(key, 'CloudControlIp', 0,
+                            wreg.REG_SZ, self.endpoint)
+            print(wreg.QueryValueEx(key, 'CloudControlIp'))
+            key.Close()
+
 
 def validate_dhcp_resp(request, response, debug):
     bytes_recv = len(response)
     if bytes_recv < 0xF6:
         print("HandleDhcpResponse: Too few bytes received:{0}",
-                     bytes_recv)
+              bytes_recv)
         return False
 
     if debug == True:
@@ -158,21 +169,21 @@ def validate_dhcp_resp(request, response, debug):
     # meant from another machine
     if not util.compare_bytes(request, response, 0xEC, 4):
         print("Cookie not match:\nsend={0},\nreceive={1}",
-                       util.hex_dump3(request, 0xEC, 4),
-                       util.hex_dump3(response, 0xEC, 4))
+              util.hex_dump3(request, 0xEC, 4),
+              util.hex_dump3(response, 0xEC, 4))
         raise DhcpError("Cookie in dhcp respones doesn't match the request")
 
     if not util.compare_bytes(request, response, 4, 4):
         print("TransactionID not match:\nsend={0},\nreceive={1}",
-                       util.hex_dump3(request, 4, 4),
-                       util.hex_dump3(response, 4, 4))
+              util.hex_dump3(request, 4, 4),
+              util.hex_dump3(response, 4, 4))
         raise DhcpError("TransactionID in dhcp respones "
                         "doesn't match the request")
 
     if not util.compare_bytes(request, response, 0x1C, 6):
         print("Mac Address not match:\nsend={0},\nreceive={1}",
-                       util.hex_dump3(request, 0x1C, 6),
-                       util.hex_dump3(response, 0x1C, 6))
+              util.hex_dump3(request, 0x1C, 6),
+              util.hex_dump3(response, 0x1C, 6))
         raise DhcpError("Mac Addr in dhcp respones "
                         "doesn't match the request")
 
@@ -180,7 +191,7 @@ def validate_dhcp_resp(request, response, debug):
 def parse_route(response, option, i, length, bytes_recv):
     # http://msdn.microsoft.com/en-us/library/cc227282%28PROT.10%29.aspx
     print("Routes at offset: {0} with length:{1}", hex(i),
-                   hex(length))
+          hex(length))
     routes = []
     if length < 5:
         print("Data too small for option:{0}", option)
@@ -238,7 +249,8 @@ def parse_dhcp_resp(response, debug):
         if (i + 1) < bytes_recv:
             length = util.str_to_ord(response[i + 1])
             if debug == True:
-                print("DHCP option {0} at offset:{1} with length:{2}", hex(option), hex(i), hex(length))
+                print("DHCP option {0} at offset:{1} with length:{2}", hex(
+                    option), hex(i), hex(length))
         if option == 255:
             if debug == True:
                 print("DHCP packet ended at offset:{0}", hex(i))
@@ -252,10 +264,12 @@ def parse_dhcp_resp(response, debug):
         elif option == 245:
             endpoint = parse_ip_addr(response, option, i, length, bytes_recv)
             if debug == True:
-                print("Azure cloud control endpoint IP:{0}, at {1}", endpoint, hex(i))
+                print(
+                    "Azure cloud control endpoint IP:{0}, at {1}", endpoint, hex(i))
         else:
             if debug == True:
-                print("Skipping DHCP option:{0} at {1} with length {2}", hex(option), hex(i), hex(length))
+                print("Skipping DHCP option:{0} at {1} with length {2}", hex(
+                    option), hex(i), hex(length))
         i += length + 2
     return endpoint, gateway, routes
 
@@ -338,7 +352,7 @@ def build_dhcp_request(mac_addr, request_broadcast, debug):
         # set broadcast flag to true to request the dhcp sever
         # to respond to a boradcast address,
         # this is useful when user dhclient fails.
-        request[0x0A] = 0x80;
+        request[0x0A] = 0x80
 
     # fill in ClientHardwareAddress
     for a in range(0, 6):
@@ -353,13 +367,17 @@ def build_dhcp_request(mac_addr, request_broadcast, debug):
         request[0xEC + a] = [99, 130, 83, 99, 53, 1, 1, 255][a]
     return array.array("B", request)
 
+
 def gen_trans_id():
     return os.urandom(4)
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--debug', action='store_true', help='Enable running the script in debug mode')
-parser.add_argument('--donotaddtoenv', action='store_true', help='Do not add the cloud control endpoint to environment variable')
-parser.add_argument('--outputregistry', action='store_true', help='Option to store CloudControl IP address as registry value')
+parser.add_argument('--debug', action='store_true',
+                    help='Enable running the script in debug mode')
+parser.add_argument('--donotaddtoenv', action='store_true',
+                    help='Do not add the cloud control endpoint to environment variable')
+parser.add_argument('--outputregistry', action='store_true',
+                    help='Option to store CloudControl IP address as registry value')
 args = parser.parse_args()
 dhcp = DhcpHandler()
 dhcp.run(args.debug, args.donotaddtoenv, args.outputregistry)
