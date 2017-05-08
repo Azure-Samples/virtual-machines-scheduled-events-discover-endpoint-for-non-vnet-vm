@@ -28,7 +28,10 @@ namespace ScheduledEventsSample
             Uri scheduledEventsEndpoint =
                 ScheduledEventsEndpointDiscovery.ScheduledEventsUtility.ObtainScheduledEventsUri();
 
+            Console.WriteLine("Scheduled Events URI: {0}", scheduledEventsEndpoint);
+
             client = new ScheduledEventsClient(scheduledEventsEndpoint);
+
             while (true)
             {
                 Console.WriteLine("Getting the Scheduled Events Document...\n");

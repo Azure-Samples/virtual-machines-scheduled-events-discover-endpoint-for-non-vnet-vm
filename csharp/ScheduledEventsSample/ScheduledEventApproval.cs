@@ -16,21 +16,28 @@
 namespace ScheduledEventsSample
 {
     using System.Collections.Generic;
+    using System.Runtime.Serialization;
     using Newtonsoft.Json;
 
+    /// <summary>
+    /// Represents the document structure used to expedite scheduled events
+    /// </summary>
     public class ScheduledEventsApproval
     {
         public List<StartRequest> StartRequests = new List<StartRequest>();
     }
 
+    /// <summary>
+    /// An individual request to expedite an event
+    /// </summary>
     public class StartRequest
     {
-        [JsonProperty("EventId")]
-        private string eventId;
+        [DataMember]
+        private string EventId;
 
         public StartRequest(string eventId)
         {
-            this.eventId = eventId;
+            this.EventId = eventId;
         }
     }
 }

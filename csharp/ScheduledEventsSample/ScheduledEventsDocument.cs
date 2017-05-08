@@ -18,11 +18,17 @@ namespace ScheduledEventsSample
     using System;
     using System.Collections.Generic;
 
+    /// <summary>
+    /// Represents the entire Scheduled Events document
+    /// </summary>
     public class ScheduledEventsDocument
     {
         public List<CloudControlEvent> Events { get; set; }
     }
 
+    /// <summary>
+    /// Represents an individual scheduled event
+    /// </summary>
     public class CloudControlEvent
     {
         public string EventId { get; set; }
