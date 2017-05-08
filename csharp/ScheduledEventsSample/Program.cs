@@ -50,8 +50,12 @@ namespace ScheduledEventsSample
                 Console.WriteLine("Press Enter to approve executing events\n");
                 Console.ReadLine();
 
-                // Approve events
-                ScheduledEventsApproval scheduledEventsApprovalDocument = new ScheduledEventsApproval();
+                // Create approval document and approve events
+                ScheduledEventsApproval scheduledEventsApprovalDocument = new ScheduledEventsApproval()
+                {
+                    DocumentIncarnation = scheduledEventsDocument.DocumentIncarnation
+                };
+
                 foreach (CloudControlEvent ccevent in scheduledEventsDocument.Events)
                 {
                     scheduledEventsApprovalDocument.StartRequests.Add(new StartRequest(ccevent.EventId));

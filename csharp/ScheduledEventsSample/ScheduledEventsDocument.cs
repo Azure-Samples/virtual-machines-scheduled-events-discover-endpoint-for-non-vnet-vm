@@ -17,25 +17,43 @@ namespace ScheduledEventsSample
 {
     using System;
     using System.Collections.Generic;
+    using System.Runtime.Serialization;
 
     /// <summary>
     /// Represents the entire Scheduled Events document
     /// </summary>
+    [DataContract]
     public class ScheduledEventsDocument
     {
+        [DataMember]
+        public string DocumentIncarnation;
+
+        [DataMember]
         public List<CloudControlEvent> Events { get; set; }
     }
 
     /// <summary>
     /// Represents an individual scheduled event
     /// </summary>
+    [DataContract]
     public class CloudControlEvent
     {
+        [DataMember]
         public string EventId { get; set; }
+
+        [DataMember]
         public string EventStatus { get; set; }
+
+        [DataMember]
         public string EventType { get; set; }
+
+        [DataMember]
         public string ResourceType { get; set; }
+
+        [DataMember]
         public List<string> Resources { get; set; }
+
+        [DataMember]
         public DateTime? NotBefore { get; set; }
     }
 }

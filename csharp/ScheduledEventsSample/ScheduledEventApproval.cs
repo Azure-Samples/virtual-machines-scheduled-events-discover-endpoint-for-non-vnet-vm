@@ -17,19 +17,24 @@ namespace ScheduledEventsSample
 {
     using System.Collections.Generic;
     using System.Runtime.Serialization;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// Represents the document structure used to expedite scheduled events
     /// </summary>
+    [DataContract]
     public class ScheduledEventsApproval
     {
+        [DataMember]
+        public string DocumentIncarnation;
+
+        [DataMember]
         public List<StartRequest> StartRequests = new List<StartRequest>();
     }
 
     /// <summary>
     /// An individual request to expedite an event
     /// </summary>
+    [DataContract]
     public class StartRequest
     {
         [DataMember]
