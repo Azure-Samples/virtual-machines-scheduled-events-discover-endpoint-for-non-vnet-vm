@@ -25,7 +25,8 @@ function GetScheduledEventsURLForNonVnet([bool] $isVnet)
     return $uri.AbsoluteUri
 }
 
-# Gets the discovery utility dll located within same directory as script
+# Gets the path for the discovery utility dll. DLL must be 
+# located within same directory as script
 function GetLocalDiscoveryDllPath()
 {
     $dllName = "ScheduledEventsEndpointDiscovery.dll"
