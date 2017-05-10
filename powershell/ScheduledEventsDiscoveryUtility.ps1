@@ -16,7 +16,7 @@
 
 
 # How to get scheduled events endpoint using discovery dll
-function GetScheduledEventsURLForNonVnet([bool] $isVnet)
+function GetScheduledEventsURLForNonVnet()
 {
     $dllLocation = GetLocalDiscoveryDllPath
     $assembly = [Reflection.Assembly]::LoadFile($dllLocation)
