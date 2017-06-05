@@ -18,13 +18,17 @@ discovery.py, make sure to provide --use_registry when running sample.py. Altern
 --ip_address YOUR_IP_ADDRESS
 
 * python sample.py -h
+
 usage: Sample.py [-h] [--use_registry] [--ip_address IP_ADDRESS]
 
 Sample code for getting scheduled events.
 
 optional arguments:
+
   -h, --help            show this help message and exit
+
   --use_registry        Get the IP address from Windows registry.
+  
   --ip_address IP_ADDRESS
                         The IP address of scheduled events endpoint.
 
@@ -49,16 +53,22 @@ By default, upon discovering the CloudControl IP address, the script adds it to 
 Linux is “CLOUDCONTROLIP”. However, the script has two additional modes of operation – “--debug” and “--donotaddtoenv” as listed below.
 
 --debug: Enables running the script in debug mode wherein more logging is available for debugging purposes
+
 --donotaddtoenv: Enables not adding the CloudControl IP as part of the environment variable
 
 * python discovery.py -h
+
 usage: discovery.py [-h] [--debug] [--donotaddtoenv]
 
 optional arguments:
+
   -h, --help       show this help message and exit
+
   --debug          Enable running the script in debug mode
+
   --donotaddtoenv  Do not add the cloud control endpoint to environment
                    Variable
+
 
 ## Running the script on Windows and Linux
 
