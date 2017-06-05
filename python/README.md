@@ -1,18 +1,49 @@
 # Overview
 
-There are a total of 2 scripts:
-1.	Discovery.py – This contains the core logic and is the entry point
-2.	Util.py – This contains a bunch of utility/helper functions
+This folder contains sample code for using Scheduled Events and discovering the IP address of Scheduled Events endpoint.
 
 
-## How does endpoint discovery work?
+## Sample
+
+### Files
+
+1.  sample.py - This contains the sample script for using Scheduled Events.
+
+### Script usage
+
+If the machine is inside a virtual network, simply run sample.py.
+
+Otherwise, first run discovery.py to find the IP address of the Scheduled Events endpoint. If you used --donotaddtoenv when running
+discovery.py, make sure to provide --use_registry when running sample.py. Alternatively, you could provide an IP address using 
+--ip_address YOUR_IP_ADDRESS
+
+* python sample.py -h
+usage: Sample.py [-h] [--use_registry] [--ip_address IP_ADDRESS]
+
+Sample code for getting scheduled events.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --use_registry        Get the IP address from Windows registry.
+  --ip_address IP_ADDRESS
+                        The IP address of scheduled events endpoint.
+
+
+## Discovery
+
+### Files
+
+1.	discovery.py – This contains the core logic and is the entry point.
+2.	util.py – This contains a bunch of utility/helper functions.
+
+### How does endpoint discovery work?
 
 The mechanism to discover the CloudControl IP address is to resend a DHCP request. In the centralized DHCP service, the response is customized 
 by carrying the CloudControl IP address inside the DHCP response option 245. The endpoint discovery script uses the same mechanism to determine 
 the CloudControl IP address. Once the IP address is obtained, it is made available as part of the environment variable both in Windows and Linux worlds.
 
 
-## Script usage
+### Script usage
 
 By default, upon discovering the CloudControl IP address, the script adds it to the environment variables. The variable name in both Windows and 
 Linux is “CLOUDCONTROLIP”. However, the script has two additional modes of operation – “--debug” and “--donotaddtoenv” as listed below.
