@@ -27,7 +27,7 @@ def get_ip_address(args):
     '''
     ip_address = None
     if args.ip_address:
-        # use IP address provided in parameter
+        # use IP address provided in parameter.
         ip_address = args.ip_address
     elif args.use_registry and sys.platform == 'win32':
         # use CloudControlIp in registry if available.
@@ -48,7 +48,7 @@ def parse_args():
     '''
     parser = argparse.ArgumentParser(description="Sample code for getting scheduled events.")
     parser.add_argument('--use_registry', action="store_true",
-                        help="Get the IP address from Windows registry")
+                        help="Get the IP address from Windows registry.")
     parser.add_argument('--ip_address', type=str,
                         help="The IP address of scheduled events endpoint.")
     return parser.parse_args()
@@ -60,13 +60,14 @@ def main():
     args = parse_args()
 
     ip_address = get_ip_address(args)
-    print(ip_address)
     if ip_address is None:
-        # Default IP address for machines in VNET
+        # Default IP address for machines in VNET.
         ip_address = '169.254.169.254'
 
     address = 'http://' + ip_address + '/metadata/scheduledevents?api-version=2017-03-01'
     headers = {'metadata':'true'}
+
+    print("Scheduled Events enpoint address = " + address)
 
     # Repeat until user terminates the script.
     while True:
