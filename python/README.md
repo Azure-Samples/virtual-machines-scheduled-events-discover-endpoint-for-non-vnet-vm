@@ -17,20 +17,16 @@ Otherwise, first run discovery.py to find the IP address of the Scheduled Events
 discovery.py, make sure to provide --use_registry when running sample.py. Alternatively, you could provide an IP address using 
 --ip_address YOUR_IP_ADDRESS
 
-* python sample.py -h
+    $ python Sample.py --help
+    usage: Sample.py [-h] [--use_registry] [--ip_address IP_ADDRESS]
 
-usage: Sample.py [-h] [--use_registry] [--ip_address IP_ADDRESS]
+    Sample code for getting scheduled events.
 
-Sample code for getting scheduled events.
-
-optional arguments:
-
-  -h, --help            show this help message and exit
-
-  --use_registry        Get the IP address from Windows registry.
-  
-  --ip_address IP_ADDRESS
-                        The IP address of scheduled events endpoint.
+    optional arguments:
+      -h, --help            show this help message and exit
+      --use_registry        Get the IP address from Windows registry.
+      --ip_address IP_ADDRESS
+                            The IP address of scheduled events endpoint.
 
 
 ## Discovery
