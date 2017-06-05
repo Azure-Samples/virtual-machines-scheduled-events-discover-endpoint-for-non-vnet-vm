@@ -17,7 +17,7 @@ Otherwise, first run discovery.py to find the IP address of the Scheduled Events
 discovery.py, make sure to provide --use_registry when running sample.py. Alternatively, you could provide an IP address using 
 --ip_address YOUR_IP_ADDRESS
 
-    $ python Sample.py --help
+    $ python sample.py -h
     usage: Sample.py [-h] [--use_registry] [--ip_address IP_ADDRESS]
 
     Sample code for getting scheduled events.
@@ -52,18 +52,18 @@ Linux is “CLOUDCONTROLIP”. However, the script has two additional modes of o
 
 --donotaddtoenv: Enables not adding the CloudControl IP as part of the environment variable
 
-* python discovery.py -h
+    $ python discovery.py -h
 
-usage: discovery.py [-h] [--debug] [--donotaddtoenv]
+    usage: discovery.py [-h] [--debug] [--donotaddtoenv]
 
-optional arguments:
+    optional arguments:
 
-  -h, --help       show this help message and exit
+      -h, --help       show this help message and exit
 
-  --debug          Enable running the script in debug mode
+      --debug          Enable running the script in debug mode
 
-  --donotaddtoenv  Do not add the cloud control endpoint to environment
-                   Variable
+      --donotaddtoenv  Do not add the cloud control endpoint to environment
+                      Variable
 
 
 ## Running the script on Windows and Linux
