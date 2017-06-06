@@ -34,6 +34,8 @@ discovery.py, make sure to provide --use_registry when running sample.py. Altern
 
 **Only runs with Python3.5+**
 
+Runs on both Windows and Linux.
+
 
 ## Discovery
 
