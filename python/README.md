@@ -8,6 +8,8 @@ This folder contains sample code for using Scheduled Events and discovering the 
 ### Files
 
 1.  sample.py - This contains the sample script for using Scheduled Events.
+2.  util.py – This contains utility functions used by sample script and the discovery script.
+
 
 ### Script usage
 
@@ -34,7 +36,7 @@ discovery.py, make sure to provide --use_registry when running sample.py. Altern
 ### Files
 
 1.	discovery.py – This contains the core logic and is the entry point.
-2.	util.py – This contains a bunch of utility/helper functions.
+2.	util.py – This contains utility functions used by main discovery script and the sample script.
 
 ### How does endpoint discovery work?
 
