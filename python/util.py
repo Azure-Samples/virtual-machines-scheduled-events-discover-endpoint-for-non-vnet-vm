@@ -54,7 +54,7 @@ def check_ip_address(address, headers):
     '''
     try:
         response = get_scheduled_events(address, headers)
-        return 'Events' in json.loads(response.read())
+        return 'Events' in json.loads(response.read().decode('utf-8'))
     except (urllib.error.URLError, UnicodeDecodeError, json.decoder.JSONDecodeError) as _:
         return False
 
@@ -90,7 +90,7 @@ def get_address(arg_ip_address, use_registry, headers):
         ip_address = arg_ip_address
     else:
         # use default IP address for machines in VNET.
-        ip_address = '169.254.169.254'
+        ip_address = '169.254.169.255'
 
     # Check if the IP address is valid. If not, try getting the IP address from registry
     # or environment. Exits if no IP address is valid.

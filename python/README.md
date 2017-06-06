@@ -30,6 +30,10 @@ discovery.py, make sure to provide --use_registry when running sample.py. Altern
       --ip_address IP_ADDRESS
                             The IP address of scheduled events endpoint.
 
+### Compatibility
+
+**Only runs with Python3.5+**
+
 
 ## Discovery
 
@@ -68,12 +72,9 @@ Linux is “CLOUDCONTROLIP”. However, the script has two additional modes of o
                       Variable
 
 
-## Running the script on Windows and Linux
+### Compatibility
 
-Pre-requesites: Install python 2.4+ 
+python 2.4+ or python 3.5+
 
-Running on Windows: Once you have installed python, open an admin cmd window. Run the script by calling “python discovery.py”. 
+**Only runs on Windows**. Once you have installed python, open an admin cmd window. Run the script by calling “python discovery.py”. 
 If you want to include any of the optional switches, you can do so by calling “python discovery.py –debug”.
-
-Running on Linux: Once you have installed python, run the script by calling “sudo python discovery.py”. You can include any/all of the 
-optional switches.

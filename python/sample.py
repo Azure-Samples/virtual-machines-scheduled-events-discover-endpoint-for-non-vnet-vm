@@ -48,7 +48,7 @@ def main():
     while True:
         # Send a GET request for scheduled events and read the response.
         response = get_scheduled_events(address, headers)
-        document = json.loads(response.read())
+        document = json.loads(response.read().decode('utf-8'))
         events = document['Events']
         print('Scheduled Events Document:\n' + str(document))
 
