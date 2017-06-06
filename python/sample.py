@@ -18,93 +18,9 @@ Press Ctrl + C and then Enter to exit.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import json
-import urllib.request
-import urllib.parse
-import sys
-import os
 import argparse
-import winreg as wreg
 
-def get_scheduled_events(address, headers):
-    '''
-    Make a GET request and return the response received.
-    '''
-    request = urllib.request.Request(address, headers=headers)
-    return urllib.request.urlopen(request)
-
-def post_scheduled_events(address, data, headers):
-    '''
-    Make a POST request.
-    '''
-    request = urllib.request.Request(address, data=str.encode(data), headers=headers)
-    urllib.request.urlopen(request)
-
-def make_address(ip_address):
-    '''
-    Returns the address for scheduled event endpoint from the IP address provided.
-    '''
-    return 'http://' + ip_address + '/metadata/scheduledevents?api-version=2017-03-01'
-
-def check_ip_address(address, headers):
-    '''
-    Checks whether the address of the scheduled event endpoint is valid.
-    '''
-    try:
-        response = get_scheduled_events(address, headers)
-        return 'Events' in json.loads(response.read())
-    except (urllib.error.URLError, UnicodeDecodeError, json.decoder.JSONDecodeError) as _:
-        return False
-
-def get_ip_address_reg_env(args):
-    '''
-    Get the IP address of scheduled event from registry or environment.
-    Returns None if IP address is not provided or stored.
-    '''
-    ip_address = None
-    if args.use_registry and sys.platform == 'win32':
-        # use CloudControlIp in registry if available.
-        try:
-            key = wreg.OpenKey(wreg.HKEY_LOCAL_MACHINE, "Software\\CloudControl")
-            ip_address = wreg.QueryValueEx(key, 'CloudControlIp')[0]
-            key.Close()
-        except FileNotFoundError:
-            pass
-    elif sys.platform == 'win32' or "linux" in sys.platform:
-        # use CLOUDCONTROLIP in system variables if available.
-        ip_address = os.getenv('CLOUDCONTROLIP')
-
-    if ip_address is None:
-        print("Could not find a valid IP address. Please create your VM within a VNET " +
-              "or run discovery.py first")
-        exit(1)
-    return ip_address
-
-def get_address(args, headers):
-    '''
-    Gets the address of the Scheduled Events endpoint.
-    '''
-    ip_address = None
-    address = None
-    if args.ip_address:
-        # use IP address provided in parameter.
-        ip_address = args.ip_address
-    else:
-        # use default IP address for machines in VNET.
-        ip_address = '169.254.169.254'
-
-    # Check if the IP address is valid. If not, try getting the IP address from registry
-    # or environment. Exits if no IP address is valid.
-    address = make_address(ip_address)
-    if not check_ip_address(address, headers):
-        print("The provided IP address is invalid or VM is not in VNET. " +
-              "Trying registry and environment.")
-        ip_address = get_ip_address_reg_env(args)
-        address = make_address(ip_address)
-        if not check_ip_address(address, headers):
-            print("Could not find a valid IP address. Please create your VM within a VNET " +
-                  "or run discovery.py first")
-            exit(1)
-    return address
+from util import get_address, get_scheduled_events, post_scheduled_events
 
 def parse_args():
     '''
