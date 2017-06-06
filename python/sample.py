@@ -40,9 +40,9 @@ def main():
     args = parse_args()
     headers = {'metadata':'true'}
 
-    address = get_address(args, headers)
+    address = get_address(args.ip_address, args.use_registry, headers)
 
-    print("Scheduled Events enpoint address = " + address)
+    print("Scheduled Events endpoint address = " + address)
 
     # Repeat until user terminates the script.
     while True:

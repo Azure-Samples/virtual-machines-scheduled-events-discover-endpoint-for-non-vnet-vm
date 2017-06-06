@@ -22,7 +22,6 @@ import socket
 import array
 import struct
 from uuid import getnode as get_mac
-import winreg as wreg
 import json
 import urllib.request
 import urllib.parse
@@ -59,13 +58,14 @@ def check_ip_address(address, headers):
     except (urllib.error.URLError, UnicodeDecodeError, json.decoder.JSONDecodeError) as _:
         return False
 
-def get_ip_address_reg_env(args):
+def get_ip_address_reg_env(use_registry):
     '''
     Get the IP address of scheduled event from registry or environment.
     Returns None if IP address is not provided or stored.
     '''
     ip_address = None
-    if args.use_registry and sys.platform == 'win32':
+    if use_registry and sys.platform == 'win32':
+        import winreg as wreg
         # use CloudControlIp in registry if available.
         try:
             key = wreg.OpenKey(wreg.HKEY_LOCAL_MACHINE, "Software\\CloudControl")
@@ -77,21 +77,17 @@ def get_ip_address_reg_env(args):
         # use CLOUDCONTROLIP in system variables if available.
         ip_address = os.getenv('CLOUDCONTROLIP')
 
-    if ip_address is None:
-        print("Could not find a valid IP address. Please create your VM within a VNET " +
-              "or run discovery.py first")
-        exit(1)
     return ip_address
 
-def get_address(args, headers):
+def get_address(arg_ip_address, use_registry, headers):
     '''
     Gets the address of the Scheduled Events endpoint.
     '''
     ip_address = None
     address = None
-    if args.ip_address:
+    if arg_ip_address:
         # use IP address provided in parameter.
-        ip_address = args.ip_address
+        ip_address = arg_ip_address
     else:
         # use default IP address for machines in VNET.
         ip_address = '169.254.169.254'
@@ -102,7 +98,7 @@ def get_address(args, headers):
     if not check_ip_address(address, headers):
         print("The provided IP address is invalid or VM is not in VNET. " +
               "Trying registry and environment.")
-        ip_address = get_ip_address_reg_env(args)
+        ip_address = get_ip_address_reg_env(use_registry)
         address = make_address(ip_address)
         if not check_ip_address(address, headers):
             print("Could not find a valid IP address. Please create your VM within a VNET " +
