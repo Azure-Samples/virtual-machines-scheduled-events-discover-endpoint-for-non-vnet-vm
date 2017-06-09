@@ -90,7 +90,7 @@ def get_address(arg_ip_address, use_registry, headers):
         ip_address = arg_ip_address
     else:
         # use default IP address for machines in VNET.
-        ip_address = '169.254.169.255'
+        ip_address = '169.254.169.254'
 
     # Check if the IP address is valid. If not, try getting the IP address from registry
     # or environment. Exits if no IP address is valid.
