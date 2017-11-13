@@ -22,7 +22,7 @@ namespace ScheduledEventsEndpointDiscovery
     public static class ScheduledEventsUtility
     {
         public static readonly int InstanceMetadataServicePort = 8080;
-        private static readonly string InstanceMetadataServiceEndpointPath = "/metadata/latest/scheduledevents";
+        private static readonly string InstanceMetadataServiceEndpointPath = "/metadata/scheduledEvents?api-version=2017-08-01";
         private const uint ControlSystemDhcpOptionID = 245;
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace ScheduledEventsEndpointDiscovery
                 }
                 catch (DhcpRequestFailedException e)
                 {
-                    
+
                 }
             }
 
@@ -120,7 +120,7 @@ namespace ScheduledEventsEndpointDiscovery
 
             thread.Start();
 
-            // wait no more than 3 minutes, to compensate for win7 bug 699003 (timezone issue 
+            // wait no more than 3 minutes, to compensate for win7 bug 699003 (timezone issue
             // causing DHCP service to malfunction, leading to infinite blocking of DHCP API calls)
             if (thread.Join(TimeSpan.FromMinutes(3)) == false)
             {

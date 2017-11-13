@@ -24,9 +24,22 @@ namespace ScheduledEventsSample
 
         static void Main(string[] args)
         {
-            // This is only needed for non-vnet VMs! VNET VMs can use the known endpoint
-            Uri scheduledEventsEndpoint =
-                ScheduledEventsEndpointDiscovery.ScheduledEventsUtility.ObtainScheduledEventsUri();
+            Uri scheduledEventsEndpoint;
+
+            Console.WriteLine("Is this virtual machine VNET Enabled? Y/N");
+            string response = Console.ReadLine();
+            bool vNet = string.Equals("Y", response, StringComparison.OrdinalIgnoreCase);
+
+            if (vNet)
+            {
+                // Use the known endpoint available for VNET VMs
+                scheduledEventsEndpoint = new Uri("http://169.254.169.254/metadata/scheduledevents?api-version=2017-08-01");
+            }
+            else
+            {
+                // Use discovery utility to discover the endpoint
+                scheduledEventsEndpoint = ScheduledEventsEndpointDiscovery.ScheduledEventsUtility.ObtainScheduledEventsUri();
+            }
 
             Console.WriteLine("Scheduled Events URI: {0}", scheduledEventsEndpoint);
 
@@ -37,7 +50,7 @@ namespace ScheduledEventsSample
                 Console.WriteLine("Getting the Scheduled Events Document...\n");
 
                 // Get the events json string
-                string json = client.GetDocument();
+                string json = client.GetScheduledEvents();
                 Console.WriteLine($"Scheduled Events Document: {json}\n");
 
                 // Deserialize using Newtonsoft.Json
@@ -47,7 +60,7 @@ namespace ScheduledEventsSample
                 HandleEvents(scheduledEventsDocument.Events);
 
                 // Wait for user response
-                Console.WriteLine("Press Enter to approve executing events\n");
+                Console.WriteLine("Press Enter to approve all scheduled events\n");
                 Console.ReadLine();
 
                 // Create approval document and approve events
@@ -56,9 +69,9 @@ namespace ScheduledEventsSample
                     DocumentIncarnation = scheduledEventsDocument.DocumentIncarnation
                 };
 
-                foreach (CloudControlEvent ccevent in scheduledEventsDocument.Events)
+                foreach (ScheduledEvent e in scheduledEventsDocument.Events)
                 {
-                    scheduledEventsApprovalDocument.StartRequests.Add(new StartRequest(ccevent.EventId));
+                    scheduledEventsApprovalDocument.StartRequests.Add(new StartRequest(e.EventId));
                 }
 
                 if (scheduledEventsApprovalDocument.StartRequests.Count > 0)
@@ -68,7 +81,7 @@ namespace ScheduledEventsSample
                         JsonConvert.SerializeObject(scheduledEventsApprovalDocument);
 
                     Console.WriteLine($"Approving events with json: {approveEventsJsonDocument}\n");
-                    client.PostResponse(approveEventsJsonDocument);
+                    client.ExpediteScheduledEvents(approveEventsJsonDocument);
                 }
 
                 Console.WriteLine("Complete. Press enter to repeat\n\n");
@@ -77,7 +90,7 @@ namespace ScheduledEventsSample
             }
         }
 
-        private static void HandleEvents(List<CloudControlEvent> events)
+        private static void HandleEvents(List<ScheduledEvent> events)
         {
             // Add logic for handling events here
         }

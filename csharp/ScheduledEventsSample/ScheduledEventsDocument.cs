@@ -29,14 +29,14 @@ namespace ScheduledEventsSample
         public string DocumentIncarnation;
 
         [DataMember]
-        public List<CloudControlEvent> Events { get; set; }
+        public List<ScheduledEvent> Events { get; set; }
     }
 
     /// <summary>
     /// Represents an individual scheduled event
     /// </summary>
     [DataContract]
-    public class CloudControlEvent
+    public class ScheduledEvent
     {
         [DataMember]
         public string EventId { get; set; }

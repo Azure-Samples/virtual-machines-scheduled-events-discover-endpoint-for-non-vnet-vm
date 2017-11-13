@@ -28,30 +28,30 @@ namespace ScheduledEventsSample
         }
 
         /// <summary>
-        /// Issues a get request to the scheduled events endpoint. 
-        /// 
-        /// For additional information on possible return status codes and headers, 
-        /// Please see here: "https://docs.microsoft.com/en-us/azure/virtual-machines/virtual-machines-scheduled-events" 
-        /// 
+        /// Issues a get request to the scheduled events endpoint.
+        ///
+        /// For additional information on possible return status codes and headers,
+        /// Please see here: "https://docs.microsoft.com/en-us/azure/virtual-machines/virtual-machines-scheduled-events"
+        ///
         /// </summary>
         /// <returns>The Scheduled Events document json as a string</returns>
-        public string GetDocument()
+        public string GetScheduledEvents()
         {
             using (var webClient = new WebClient())
             {
                 webClient.Headers.Add("Metadata", "true");
                 return webClient.DownloadString(scheduledEventsEndpoint);
-            }   
+            }
         }
 
         /// <summary>
         /// Issues a post request to the scheduled events endpoint with the given json string
-        /// 
-        /// For additional information on possible return status codes and headers, 
-        /// Please see here: "https://docs.microsoft.com/en-us/azure/virtual-machines/virtual-machines-scheduled-events" 
+        ///
+        /// For additional information on possible return status codes and headers,
+        /// Please see here: "https://docs.microsoft.com/en-us/azure/virtual-machines/virtual-machines-scheduled-events"
         /// </summary>
         /// <param name="jsonPost">Json string with events to be approved</param>
-        public void PostResponse(string jsonPost)
+        public void ExpediteScheduledEvents(string jsonPost)
         {
             using (var webClient = new WebClient())
             {
