@@ -1,8 +1,7 @@
+
 How does endpoint discovery work?
 ===
-The mechanism to discover the Scheduled Events Service IP address is to send a DHCP request. In the centralized DHCP service, the response is customized 
-by carrying the IP address inside the DHCP response option 245. The endpoint discovery script uses the same mechanism to determine 
-the Scheduled Events IP address. Once the IP address is obtained, it is made available as part of the environment variable both in Windows and Linux worlds.
+The mechanism to discover the Scheduled Events Service IP address is to send a DHCP request. In the centralized DHCP service, the response is customized by carrying the IP address inside the DHCP response option 245. The endpoint discovery script uses the same mechanism to determine the Scheduled Events IP address. Once the IP address is obtained, it is made available as part of the environment variable both in Windows and Linux worlds.
 
 Running the discovery script
 ===
@@ -22,11 +21,11 @@ optional switches.
 
 Discovering the endpoint
 ===
-By default, upon discovering the Scheduled Events Service IP address, the script adds it to the environment variables. The variable name in both Windows and 
-Linux is “SCHEDULEDEVENTSIP”. However, the script has two additional modes of operation – “--debug” and “--donotaddtoenv” as listed below.
+By default, upon discovering the Scheduled Events Service IP address, the script adds it to the environment variables. The variable name in both Windows and Linux is “SCHEDULEDEVENTSIP”. However, the script has a few additional optional arguments as listed below.
 
 --debug: Enables running the script in debug mode wherein more logging is available for debugging purposes
---donotaddtoenv: Enables not adding the Scheduled Events IP as part of the environment variable
+--donotaddtoenv: Provides the option of not adding the Scheduled Events IP as part of the environment variable
+--outputregistry: Provides the option to store scheduled events IP as a registry value in Windows
 
 * python discovery.py -h
 usage: discovery.py [-h] [--debug] [--donotaddtoenv]
@@ -34,8 +33,8 @@ usage: discovery.py [-h] [--debug] [--donotaddtoenv]
 optional arguments:
   -h, --help       show this help message and exit
   --debug          Enable running the script in debug mode
-  --donotaddtoenv  Do not add the scheduled events endpoint to environment
-                   Variable
+  --donotaddtoenv  Do not add the scheduled events endpoint to environment variable
+  --outputregistry Store scheduled events IP address as registry value in Windows                 
 
 
 ## Example 1: Output to environment variable

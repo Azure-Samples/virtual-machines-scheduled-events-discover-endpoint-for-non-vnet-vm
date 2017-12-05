@@ -15,10 +15,10 @@
 # Requires Python 3.5+ and Openssl 1.0+
 
 # Output of running the script on Windows:
-# The cloud control endpoint IP address will be available as part of the system environment variable.
+# The scheduled events endpoint IP address will be available as part of the system environment variable.
 #
 # Output of running the script on Linux:
-# The cloud control endpoint IP address will be available as part of the
+# The scheduled events endpoint IP address will be available as part of the
 # environment variable for all users.
 
 import argparse
@@ -29,7 +29,8 @@ import array
 import time
 import util
 import sys
-import winreg as wreg
+if sys.platform == 'win32':
+    import winreg as wreg
 from uuid import getnode as get_mac
 
 """
@@ -108,27 +109,27 @@ class DhcpHandler(object):
         if resp is None:
             raise DhcpError("Failed to receive dhcp response.")
         self.endpoint, self.gateway, self.routes = parse_dhcp_resp(resp, debug)
-        print('Cloud Control endpoint IP address:', self.endpoint)
+        print('Scheduled Events endpoint IP address:', self.endpoint)
 
-        env_var = "CLOUDCONTROLIP"
+        env_var = "SCHEDULEDEVENTSIP"
         env_val = self.endpoint
         if donotaddtoenv == False:
-            print('Adding Cloud Control endpoint IP to the environment')
+            print('Adding Scheduled Events endpoint IP to the environment')
             if sys.platform == 'win32':
                 os.system("SETX {0} {1} /M".format(env_var, env_val))
 
             elif "linux" in sys.platform:
-                # Set the cloud control IP address in the environment for the
+                # Set the scheduled events IP address in the environment for the
                 # current process
-                os.environ['CLOUDCONTROLIP'] = self.endpoint
+                os.environ['SCHEDULEDEVENTSIP'] = self.endpoint
 
-                # Set the cloud control IP address in the environment for all users
+                # Set the scheduled events IP address in the environment for all users
                 # This is done by reading the file /etc/profile line by line
-                # Looking for a match to "export CLOUDCONTROLIP="
+                # Looking for a match to "export SCHEDULEDEVENTSIP="
                 # Writing the same file again excluding that line and appending that line again
                 # With the correct value of the IP address
                 f = open("/etc/profile", 'r')
-                match = "export CLOUDCONTROLIP="
+                match = "export SCHEDULEDEVENTSIP="
                 lines = f.readlines()
                 f.close()
 
@@ -140,16 +141,16 @@ class DhcpHandler(object):
                 f.close()
             else:
                 print(
-                    'Unknown operating system detected. Cannot add the cloud control IP to the environment')
+                    'Unknown operating system detected. Cannot add the scheduled events IP to the environment')
         if outputregistry == True and sys.platform == 'win32':
             print(
-                'Adding Cloud Control endpoint to registry location HKEY_LOCAL_MACHINE\\Software\\CloudControl')
+                'Adding Scheduled Events endpoint to registry location HKEY_LOCAL_MACHINE\\Software\\ScheduledEvents')
             key = wreg.CreateKey(wreg.HKEY_LOCAL_MACHINE,
-                                 "Software\\CloudControl")
+                                 "Software\\ScheduledEvents")
             # Create new value
-            wreg.SetValueEx(key, 'CloudControlIp', 0,
+            wreg.SetValueEx(key, 'ScheduledEventsIp', 0,
                             wreg.REG_SZ, self.endpoint)
-            print(wreg.QueryValueEx(key, 'CloudControlIp'))
+            print(wreg.QueryValueEx(key, 'ScheduledEventsIp'))
             key.Close()
 
 
@@ -265,7 +266,7 @@ def parse_dhcp_resp(response, debug):
             endpoint = parse_ip_addr(response, option, i, length, bytes_recv)
             if debug == True:
                 print(
-                    "Azure cloud control endpoint IP:{0}, at {1}", endpoint, hex(i))
+                    "Azure scheduled events endpoint IP:{0}, at {1}", endpoint, hex(i))
         else:
             if debug == True:
                 print("Skipping DHCP option:{0} at {1} with length {2}", hex(
@@ -375,9 +376,9 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--debug', action='store_true',
                     help='Enable running the script in debug mode')
 parser.add_argument('--donotaddtoenv', action='store_true',
-                    help='Do not add the cloud control endpoint to environment variable')
+                    help='Do not add the scheduled events endpoint to environment variable')
 parser.add_argument('--outputregistry', action='store_true',
-                    help='Option to store CloudControl IP address as registry value')
+                    help='Option to store ScheduledEvents IP address as registry value')
 args = parser.parse_args()
 dhcp = DhcpHandler()
 dhcp.run(args.debug, args.donotaddtoenv, args.outputregistry)

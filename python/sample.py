@@ -8,6 +8,7 @@ Press Ctrl + C and then Enter to exit.
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
+
 # You may obtain a copy of the License at
 
 #     http://www.apache.org/licenses/LICENSE-2.0
@@ -19,8 +20,86 @@ Press Ctrl + C and then Enter to exit.
 # limitations under the License.
 import json
 import argparse
+import urllib.request
+import urllib.parse
 
-from util import get_address, get_scheduled_events, post_scheduled_events
+def get_address(arg_ip_address, use_registry, headers):
+
+    '''
+
+    Gets the address of the Scheduled Events endpoint.
+
+    '''
+
+    ip_address = None
+
+    address = None
+
+    if arg_ip_address:
+
+        # use IP address provided in parameter.
+
+        ip_address = arg_ip_address
+
+    else:
+
+        # use default IP address for machines in VNET.
+
+        ip_address = '169.254.169.254'
+
+
+
+    # Check if the IP address is valid. If not, try getting the IP address from registry
+
+    # or environment. Exits if no IP address is valid.
+
+    address = make_address(ip_address)
+
+    if not check_ip_address(address, headers):
+
+        print("The provided IP address is invalid or VM is not in VNET. " +
+
+              "Trying registry and environment.")
+
+        ip_address = get_ip_address_reg_env(use_registry)
+
+        address = make_address(ip_address)
+
+        if not check_ip_address(address, headers):
+
+            print("Could not find a valid IP address. Please create your VM within a VNET " +
+
+                  "or run discovery.py first")
+
+            exit(1)
+
+    return address
+
+def get_scheduled_events(address, headers):
+
+    '''
+
+    Make a GET request and return the response received.
+
+    '''
+
+    request = urllib.request.Request(address, headers=headers)
+
+    return urllib.request.urlopen(request)
+
+
+
+def post_scheduled_events(address, data, headers):
+
+    '''
+
+    Make a POST request.
+
+    '''
+
+    request = urllib.request.Request(address, data=str.encode(data), headers=headers)
+
+    urllib.request.urlopen(request)
 
 def parse_args():
     '''
@@ -64,7 +143,6 @@ def main():
                     }]
                 }
                 print("Approving with the following:\n" + str(data))
-
                 # Send a POST request to expedite.
                 post_scheduled_events(address, json.dumps(data), headers)
         input("Press Enter to continue.")
