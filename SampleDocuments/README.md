@@ -1,6 +1,6 @@
 # Sample Documents
 
-In this folder you'll find example documents that you may receive in your VM. You can practice interacting with the document locally instead of having to create a VM. Below is a sample of using the samples in windows powershell: 
+In this folder you'll find example documents that you may receive in your VM. You can practice interacting with the document locally instead of having to create a VM. Below is an example in powershell using the document samples.
 
 # Powershell Example
 **PS C:\Users\UserName\Desktop>** $events = ConvertFrom-Json (Get-Content .\SampleScheduledEventsDocument.json)
